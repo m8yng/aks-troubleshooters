@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aks-wi-env-check-pod
+  namespace: default
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  containers:
+  - name: aks-wi-env-check-container
+    image: m8yng/aks-wi-env-check:latest # Replace with your Docker Hub image
+    imagePullPolicy: Always
+  serviceAccountName: workload-identity-sa # Change this to the appropriate service account name
+  restartPolicy: Always
