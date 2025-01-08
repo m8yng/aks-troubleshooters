@@ -1,9 +1,7 @@
-FROM debian:latest
+FROM debian:bookworm-slim
 WORKDIR /app
-RUN apt update && apt install -y --no-install-recommends \
-    python3 python3-pip curl jq && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
-COPY checker.py /app/
-RUN pip3 install azure-identity azure-mgmt-resource --break-system-packages
-CMD ["python3", "checker.py"]
+RUN apt update && apt install -y --no-install-recommends curl jq python3 python3-pip golang
+COPY checker.* /app/
+RUN pip3 install --no-cache-dir azure-identity azure-mgmt-resource --break-system-packages
+RUN chmod +x /app/checker.*
+CMD ["/bin/bash", "-c", "./checker.${LANG_EXT:-py}"]

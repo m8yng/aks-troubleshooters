@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import subprocess
 from azure.identity import DefaultAzureCredential
@@ -7,20 +9,6 @@ from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
 def log_step(message):
     """Utility function to log steps."""
     print(f"[INFO] {message}")
-
-
-def call_metadata_service():
-    """Call the Azure Metadata Service to retrieve a token."""
-    log_step("Calling Azure Metadata Service to fetch token...")
-    try:
-        response = subprocess.check_output([
-            "curl", "-H", "Metadata: true",
-            "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com"
-        ], universal_newlines=True)
-        print("[INFO] Metadata Service Response:")
-        print(response.strip())
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Failed to call Metadata Service: {e}")
 
 
 def get_subscription_id(credential):
@@ -37,7 +25,7 @@ def get_subscription_id(credential):
 
 
 def main():
-    log_step("Starting script execution...")
+    log_step("Starting python script execution...")
 
     # Display environment variables for debugging
     azure_client_id = os.getenv('AZURE_CLIENT_ID', '')
@@ -95,10 +83,7 @@ def main():
         print(f"[ERROR] Failed to list resource groups: {e}")
         return
 
-    # Call Metadata Service
-    call_metadata_service()
-
-    log_step("Script execution completed successfully.")
+    log_step("Python script execution completed successfully.")
 
 
 if __name__ == '__main__':
