@@ -13,5 +13,5 @@ spec:
     env:
     - name: LANG_EXT
       value: "py" # Change to go to validate through azure-sdk-for-go
-  serviceAccountName: workload-identity-sa # Change this to the appropriate service account name
-  restartPolicy: Always
+  serviceAccountName: workload-identity-sa # Use your WI-enabled service account
+  restartPolicy: Never # Run once, keep logs
