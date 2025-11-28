@@ -1,13 +1,15 @@
-//usr/bin/env go run -mod=mod "$0" "$@"; exit "$?"
+//usr/bin/env sh -c 'test -f go.mod || go mod init tmp; go mod tidy; exec go run -mod=mod "$0" "$@"' "$0" "$@"; exit $?
 
 package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/msi/armmsi"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/resources/armsubscriptions"
@@ -38,9 +40,16 @@ func main() {
 
 	// Retrieve Subscription ID
 	subscriptionID := getSubscriptionID(cred)
+	if subscriptionID == "" {
+		log.Printf("Subscription check ended with warnings above; stopping further checks.")
+		return
+	}
 
 	// Retrieve Principal ID from Managed Identity
 	principalID := getPrincipalID(cred, subscriptionID, clientID)
+	if principalID == "" {
+		log.Printf("Principal ID check ended with warnings above.")
+	}
 
 	fmt.Printf("Subscription ID: %s\n", subscriptionID)
 	fmt.Printf("Principal ID (Managed Identity): %s\n", principalID)
@@ -61,6 +70,11 @@ func getSubscriptionID(cred *azidentity.WorkloadIdentityCredential) string {
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
+			if isAuthOrRBACErr(err) {
+				log.Printf("WARN: Authentication succeeded but listing subscriptions returned %v.", err)
+				log.Printf("WARN: Assign Reader at subscription scope to the identity if you need this check.")
+				return ""
+			}
 			log.Fatalf("Failed to retrieve subscriptions: %v", err)
 		}
 
@@ -90,6 +104,11 @@ func getPrincipalID(cred *azidentity.WorkloadIdentityCredential, subscriptionID,
 	for identityPager.More() {
 		page, err := identityPager.NextPage(ctx)
 		if err != nil {
+			if isAuthOrRBACErr(err) {
+				log.Printf("WARN: Authentication succeeded but listing managed identities returned %v.", err)
+				log.Printf("WARN: Assign Reader at subscription scope (or narrower) to allow listing UAIs.")
+				return ""
+			}
 			log.Fatalf("Failed to list User-Assigned Managed Identities: %v", err)
 		}
 
@@ -107,3 +126,11 @@ func getPrincipalID(cred *azidentity.WorkloadIdentityCredential, subscriptionID,
 	return ""
 }
 
+// isAuthOrRBACErr returns true for 401/403 responses so we can downgrade to a warning.
+func isAuthOrRBACErr(err error) bool {
+	var respErr *azcore.ResponseError
+	if errors.As(err, &respErr) {
+		return respErr.StatusCode == 401 || respErr.StatusCode == 403
+	}
+	return false
+}

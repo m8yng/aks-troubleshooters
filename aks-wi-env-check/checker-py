@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 import os
-import subprocess
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.resource import ResourceManagementClient, SubscriptionClient
+from azure.core.exceptions import HttpResponseError
 
 
 def log_step(message):
@@ -75,15 +75,24 @@ def main():
     log_step("Listing resource groups using ResourceManagementClient...")
     try:
         resource_groups = list(resource_client.resource_groups.list())
-        log_step(f"API Call: GET /subscriptions/{subscription_id}/resourceGroups")
-        print(f"[INFO] Found {len(resource_groups)} resource group(s):")
+        log_step(f"API Call: GET /subscriptions/{subscription_id}/resourceGroups (permission check)")
+        print(f"[INFO] Permission check passed: found {len(resource_groups)} resource group(s):")
         for rg in resource_groups:
             print(f" - Name: {rg.name}, Location: {rg.location}")
+    except HttpResponseError as e:
+        status = getattr(e, "status_code", None) or getattr(getattr(e, "response", None), "status_code", None)
+        if status in (401, 403):
+            print(f"[WARN] Permission check could not list resource groups (status {status}).")
+            print("[WARN] Authentication succeeded, but the managed identity is likely missing Reader/Contributor access at the subscription or resource-group scope.")
+            print("[WARN] Assign a role (e.g., Reader) to the identity and re-run if you need this check; continuing without treating as fatal.")
+        else:
+            print(f"[ERROR] Failed to list resource groups: {e}")
+            return
     except Exception as e:
         print(f"[ERROR] Failed to list resource groups: {e}")
         return
 
-    log_step("Python script execution completed successfully.")
+    log_step("Python script execution completed successfully (with warnings noted above if any).")
 
 
 if __name__ == '__main__':
