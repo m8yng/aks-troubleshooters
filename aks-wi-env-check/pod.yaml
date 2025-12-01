@@ -8,10 +8,10 @@ metadata:
 spec:
   containers:
   - name: aks-wi-env-check-container
-    image: m8yng/aks-wi-env-check:latest # Replace with your registry if needed
+    image: m8yng/aks-wi-env-check:latest # Swap registry if needed
     imagePullPolicy: Always
     env:
     - name: LANG_EXT
-      value: "py" # Change to go to validate through azure-sdk-for-go
-  serviceAccountName: workload-identity-sa # Use your WI-enabled service account
+      value: "py" # py|go|rs
+  serviceAccountName: workload-identity-sa # WI-enabled service account
   restartPolicy: Never # Run once, keep logs
