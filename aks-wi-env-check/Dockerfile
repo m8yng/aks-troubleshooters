@@ -26,4 +26,4 @@ COPY checker-py /app/
 COPY --from=gobuild /src/checker-go /app/
 COPY --from=rustbuild /out/checker-rs /app/
 RUN chmod +x /app/checker-go /app/checker-py /app/checker-rs
-CMD ["/bin/sh","-lc","set -euo pipefail; if [ \"${LANG_EXT:-py}\" = \"go\" ]; then /app/checker-go; elif [ \"${LANG_EXT:-py}\" = \"rs\" ]; then /app/checker-rs; else python3 /app/checker-py; fi"]
+CMD ["/bin/sh","-lc","set -euo pipefail; if [ \"${SDK_LANG:-py}\" = \"go\" ]; then /app/checker-go; elif [ \"${SDK_LANG:-py}\" = \"rs\" ]; then /app/checker-rs; else python3 /app/checker-py; fi"]

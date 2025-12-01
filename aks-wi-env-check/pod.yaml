@@ -11,7 +11,7 @@ spec:
     image: m8yng/aks-wi-env-check:latest # Swap registry if needed
     imagePullPolicy: Always
     env:
-    - name: LANG_EXT
+    - name: SDK_LANG
       value: "py" # py|go|rs
   serviceAccountName: workload-identity-sa # WI-enabled service account
   restartPolicy: Never # Run once, keep logs
