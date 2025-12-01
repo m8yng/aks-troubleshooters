@@ -1,4 +1,4 @@
-## Workload Identity Env Checker
+## Workload Identity Environment Check
 
 Multi-arch test image that verifies Azure Workload Identity using Go, Python, or Rust. Each binary lives at `/app/checker-go`, `/app/checker-py`, `/app/checker-rs`.
 
@@ -12,7 +12,7 @@ CLIENT_ID=$(az identity show --name workload-identity-identity --resource-group 
 kubectl create serviceaccount workload-identity-sa -n default
 kubectl annotate serviceaccount workload-identity-sa -n default azure.workload.identity/client-id="${CLIENT_ID}"
 ```
-2) Set `LANG_EXT` in `pod.yaml` to `py` (default), `go`, or `rs`.  
+2) Set `SDK_LANG` in `pod.yaml` to `py` (default), `go`, or `rs`.  
 3) Deploy and read logs:
 ```
 kubectl apply -f pod.yaml
