@@ -1,0 +1,16 @@
+[package]
+name = "aks-wi-env-check"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "checker-rs"
+path = "checker.rs"
+
+[dependencies]
+azure_identity = "0.30"
+azure_core = "0.30"
+tokio = { version = "1.37", features = ["macros", "rt-multi-thread"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "native-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
