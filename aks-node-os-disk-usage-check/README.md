@@ -7,7 +7,7 @@ Diagnose OS disk usage on an AKS node by breaking down disk consumption per pod 
 The script must be executed directly on the node. Use `kubectl debug` to open a privileged shell on the target node, then run:
 
 ```bash
-curl -O https://raw.githubusercontent.com/m8yng/aks-troubleshooters/main/aks-node-os-disk-usage-check/aks-node-os-disk-usage-check.py
+curl -O https://raw.githubusercontent.com/m8yng/aks-troubleshooters/refs/heads/main/aks-node-os-disk-usage-check/aks-node-os-disk-usage-check.py
 python3 aks-node-os-disk-usage-check.py
 ```
 
