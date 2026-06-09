@@ -9,6 +9,12 @@ venv/
 env/
 .env
 
+# Go
+checker-go
+
+# Rust
+target/
+
 # IDE
 .idea/
 .vscode/
@@ -18,6 +24,7 @@ env/
 # Output
 *.json
 !example-output.json
+*.html
 
 # Cache
 script_cache/
@@ -25,3 +32,7 @@ script_cache/
 # Temp files
 *.tmp
 *.log
+
+# OS
+.DS_Store
+Thumbs.db
