@@ -1,4 +1,4 @@
-# AKS Node OS Disk Usage Check
+# AKS Node OS Disk Usage Checker
 
 Diagnose OS disk usage on an AKS node by breaking down disk consumption per pod across writable layers, emptyDir volumes, container logs, and container images.
 
@@ -7,14 +7,14 @@ Diagnose OS disk usage on an AKS node by breaking down disk consumption per pod 
 The script must be executed directly on the node. Use `kubectl debug` to open a privileged shell on the target node, then run:
 
 ```bash
-curl -O https://raw.githubusercontent.com/m8yng/aks-troubleshooters/refs/heads/main/aks-node-os-disk-usage-check/aks-node-os-disk-usage-check.py
-python3 aks-node-os-disk-usage-check.py
+curl -O https://raw.githubusercontent.com/m8yng/aks-troubleshooters/refs/heads/main/aks-node-os-disk-usage-checker/aks-node-os-disk-usage-checker.py
+python3 aks-node-os-disk-usage-checker.py
 ```
 
 To show more than the default top 30 pods:
 
 ```bash
-python3 aks-node-os-disk-usage-check.py 50
+python3 aks-node-os-disk-usage-checker.py 50
 ```
 
 ## Output

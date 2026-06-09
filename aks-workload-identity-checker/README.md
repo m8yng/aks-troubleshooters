@@ -1,8 +1,8 @@
-## Workload Identity Environment Check
+## Workload Identity Checker
 
 Multi-arch test image that verifies Azure Workload Identity using Go, Python, or Rust. Each binary lives at `/app/checker-go`, `/app/checker-py`, `/app/checker-rs`.
 
-Image: [m8yng/aks-wi-env-check](https://hub.docker.com/r/m8yng/aks-wi-env-check) (linux/amd64, linux/arm64)  
+Image: [m8yng/aks-workload-identity-checker](https://hub.docker.com/r/m8yng/aks-workload-identity-checker) (linux/amd64, linux/arm64)  
 SDKs: Go `azidentity`, Python `azure-identity`, Rust `azure_identity` + REST calls.
 
 ### Quick start
@@ -16,7 +16,7 @@ kubectl annotate serviceaccount workload-identity-sa -n default azure.workload.i
 3) Deploy and read logs:
 ```
 kubectl apply -f pod.yaml
-kubectl logs aks-wi-env-check-pod -f
+kubectl logs aks-workload-identity-checker-pod -f
 ```
 
 Notes: pod runs once (RestartPolicy Never) so logs stay available. RBAC checks log WARN on 401/403 so users see missing permissions without failing the pod; add Reader/Contributor if you want those checks to pass.
