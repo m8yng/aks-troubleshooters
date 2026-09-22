@@ -108,21 +108,16 @@ elif os.path.isdir(POD_LOGS_DIR):
         if len(uid)<30: continue
         logs[uid]=du_bytes(p)
 
-images_raw={}
+images_raw, images_share = {}, {}
 for uid,keys in pod_images.items():
-    s=0
-    for kind,val in keys:
-        s+= (img_by_id[val] if kind=="id" else img_by_name.get(val,0))
-    images_raw[uid]=s
-
-images_share={}
-for uid,keys in pod_images.items():
-    s=0.0
+    raw=0; shared=0.0
     for key in keys:
         sz = img_by_id[key[1]] if key[0]=="id" else img_by_name.get(key[1],0)
         n = max(1, len(image_pods.get(key,[])))
-        s += sz / n
-    images_share[uid]=int(s)
+        raw += sz
+        shared += sz / n
+    images_raw[uid]=raw
+    images_share[uid]=int(shared)
 
 rows=[]
 for uid,name in pods_name.items():

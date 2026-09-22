@@ -16,7 +16,6 @@ dependencies = [
  "azure_identity",
  "reqwest",
  "serde",
- "serde_json",
  "tokio",
 ]
 
